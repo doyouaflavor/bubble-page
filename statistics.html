@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    
+<div class="bubble-container">
+    <div class="bubble-template bubble-wrapper">
+      <div class="bubble-inner">
+        <img src="https://static.wixstatic.com/media/c7c46c_409e3e81bc2446d3ba5850a9c0625b1c.png/v1/fill/w_431,h_431,al_c,usm_0.66_1.00_0.01/c7c46c_409e3e81bc2446d3ba5850a9c0625b1c.png" alt="" width="25" height="25">
+        <img src="https://static.wixstatic.com/media/c7c46c_409e3e81bc2446d3ba5850a9c0625b1c.png/v1/fill/w_431,h_431,al_c,usm_0.66_1.00_0.01/c7c46c_409e3e81bc2446d3ba5850a9c0625b1c.png" alt="" width="25" height="25">
+      </div>
+    </div>
+</div>
+<div class="text-container">
+    <b><div class="text-header">
+          已吹出<span class="header-number number-1">500</span>顆泡泡
+      </div>
+      <div class="text-body">
+          本月透過此頁已賣出<span class="body-number number-2">1,000</span>組泡泡糖<br>
+          共為街賣者帶來<span class="body-number number-3">5,000</span>元收入<br>
+           <br>
+          感謝你的加入<br>
+          讓街賣成為一份支持生活的工作選擇。<br>
+      </div></b>
+</div>
+<style>
+    body{
+        background: white;
+    }
+    .bubble-container{
+        display: inline-block;
+        height: 430px;
+        width: 490px;
+    }
+    .bubble-template{
+        float: left;
+        width: 25px;
+        height: 25px;
+        position: relative;
+        /*margin-right: 5px;*/
+        display: none;
+    }
+    .bubble-wrapper{
+      width: 25px;
+      height: 25px;
+      /*position: absolute;*/
+      float: left;
+      margin-left: 7px;
+      margin-bottom: 7px;
+    }
+    .bubble-inner{
+      position: relative;
+    }
+    .bubble-wrapper img{
+        position: absolute;
+
+    }
+    .bubble-wrapper img:nth-child(2){
+        left: 3px;
+        top: 3px;
+    }
+    .text-container{
+      position: absolute;
+      display: inline;
+      height: 430px ;
+      width: 430px;
+      left: 480px;
+    }
+    .text-container{
+      word-wrap: break-word;
+      letter-spacing: 2px;
+        font: normal normal normal 15px/1.4em helvetica-w01-light,helvetica-w02-light,sans-serif;
+        font-family: 'ｍｓ ｐゴシック', 'ms pgothic', 'ヒラギノ角ゴ pro w3', 'hiragino kaku gothic pro', osaka, sans-serif;
+        text-align: center;
+    }
+    .text-header{
+        font-size: 25px;
+        position: absolute;
+        top: 120px;
+        left: 0;
+        right: 0;
+    }
+    .header-number{
+        font-size: 70px;
+    }
+    .text-body{
+        font-size: 18px;
+        position: absolute;
+        top: 200px;
+        line-height: 1.5em;
+        left: 0;
+        right: 0;
+    }
+</style>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script>
+$(function(){
+    
+jQuery.ajax = (function(_ajax){
+    
+    var protocol = location.protocol,
+        hostname = location.hostname,
+        exRegex = RegExp(protocol + '//' + hostname),
+        YQL = 'http' + (/^https/.test(protocol)?'s':'') + '://query.yahooapis.com/v1/public/yql?callback=?',
+        query = 'select * from html where url="{URL}" and xpath="*"';
+    
+    function isExternal(url) {
+        return !exRegex.test(url) && /:\/\//.test(url);
+    }
+    
+    return function(o) {
+        
+        var url = o.url;
+        
+        if ( /get/i.test(o.type) && !/json/i.test(o.dataType) && isExternal(url) ) {
+            
+            // Manipulate options so that JSONP-x request is made to YQL
+            
+            o.url = YQL;
+            o.dataType = 'json';
+            
+            o.data = {
+                q: query.replace(
+                    '{URL}',
+                    url + (o.data ?
+                        (/\?/.test(url) ? '&' : '?') + jQuery.param(o.data)
+                    : '')
+                ),
+                format: 'xml'
+            };
+            
+            // Since it's a JSONP request
+            // complete === success
+            if (!o.success && o.complete) {
+                o.success = o.complete;
+                delete o.complete;
+            }
+            
+            o.success = (function(_success){
+                return function(data) {
+                    
+                    if (_success) {
+                        // Fake XHR callback.
+                        _success.call(this, {
+                            responseText: (data.results[0] || '')
+                                // YQL screws with <script>s
+                                // Get rid of them
+                                .replace(/<script[^>]+?\/>|<script(.|\s)*?\/script>/gi, '')
+                        }, 'success');
+                    }
+                    
+                };
+            })(o.success);
+            
+        }
+        
+        return _ajax.apply(this, arguments);
+        
+    };
+    
+})(jQuery.ajax);
+   
+    var url = 'https://backme.tw/projects/236/custom_embed?locale=zh-TW';
+    $.ajax({
+        url: url,
+        type: 'GET',
+        success: function(res){
+            response = res.responseText;
+            $res = $(response);
+            $arr = $res.find('.widget-text-strong');
+            // console.log($arr);
+            var total = 0;
+            var price = 50;
+            var margin = 400;
+            
+            for(var i = 0; i < $arr.length;i++){
+                var item = $($arr[i]);
+                if(item.text().match(/^NT\$\ /)){
+                    total = item.text().replace(/^NT\$\ /,"");
+                    break;
+                }
+            }
+
+            var amount = Math.floor(total/price);
+            // var bubbles = amount* 5;
+            var bubbles = amount ;
+            if(bubbles > 210) bubbles = 210;
+
+            $('.number-1').html(amount);
+            $('.number-2').html(amount);
+            $('.number-3').html(total);
+
+            for(var i = 0; i < bubbles;i++){
+              var $b = $('.bubble-template').clone();
+              $b.removeClass('bubble-template');
+              $b.css(
+                'webkitFilter',function(){
+                  var ret = Math.floor(360/7) * i ;
+                  return 'hue-rotate(' + ret + 'deg)';
+                }
+              );
+              // $b.css({
+              //   top: function(){
+              //     return Math.random() * margin;
+              //   },
+              //   left: function(){
+              //     return Math.random() * margin;
+              //   },
+              // });
+              $('.bubble-container').append($b);
+            }
+            
+            /*
+            for(var i = 0; i < $arr.length;i++){
+                $('.number-1').append($('<div>').text($($arr[i]).text()));
+            }*/
+            
+        },
+    });
+    
+});
+</script>
+</body>
+</html>

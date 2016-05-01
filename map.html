@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+        <div id="mapid"></div>
+<style>
+#mapid { height: 582px; }
+.leaflet-container .leaflet-popup-content{
+  margin: 0;
+}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+ <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+ <script src="https://cdn.rawgit.com/junsuwhy/whereisama/gh-pages/js/tabletop.js"></script>
+<script>
+$(function(){
+Tabletop.init({
+    key: '1Co5rE5-1P8zHCBimtvLX19KfIN740O_lWP1-taoQYIo',
+    callback: afterLoadSheet,
+    simpleSheet: false
+  });
+function afterLoadSheet(data, tabletop){
+  var mymap = L.map('mapid',{'scrollWheelZoom':false,}).setView([25.033571, 121.529533], 13);
+  L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '',
+      maxZoom: 18,
+      id: 'your.mapbox.project.id',
+      accessToken: 'your.mapbox.public.access.token'
+  }).addTo(mymap);
+  var arr_data = data.people.elements;
+  var arr_fields = ['name','type','time','weekday','position','introduction','picture'];
+  var html_temp = '<h2>{{name}}</h2><img style="width: 100%;" src="{{picture}}" alt="{{title}}" /><div style="display:{{weekday?block:none}}"><span>日期：</span><span>{{weekday}}</span></div><div style="display:{{time?block:none}}"><span>時間：</span><span>{{time}}</span></div><div style="display:{{position?block:none}}"><span>位置：</span><span>{{position}}</span></div><p style="display:{{introduction?block:none}}">{{introduction}}</p>';
+  for (var i = 0; i < arr_data.length; i++) {
+    var item = arr_data[i];
+    var htmlElem = html_temp;
+    for(var j = 0;j<arr_fields.length; j++){
+      var content = item[arr_fields[j]];
+      re = RegExp("\{\{" + arr_fields[j] + "\}\}","gi");
+      htmlElem = htmlElem.replace(re,content);
+      re2 = RegExp("\{\{" + arr_fields[j] + "\\?([^:]*):([^\}]*)\}\}","gi");
+      if(content == ""){
+        htmlElem = htmlElem.replace(re2,"$2");
+      }else{
+        htmlElem = htmlElem.replace(re2,"$1");
+      }
+    }
+//    var text = html_temp.replace(/\{title\}/g,item.name)
+//      .replace(/\{img\}/g,item.picture)
+//      .replace(/\{body\}/g,item.introduction);
+    L.marker([item.lat, item.lon]).addTo(mymap)
+        .bindPopup(htmlElem);
+   } 
+}
+
+});
+</script>
+</body>
+</html>
