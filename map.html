@@ -5,9 +5,24 @@
     <title>Document</title>
 </head>
 <body>
-        <div id="mapid"></div>
+        <div id="mapid"><div class="here">在上述點找街賣者、地瓜媽媽車等等<img src="here.png" alt="這有街賣旗子圖案" height="48px" width="48px">旗子圖案的身影</div></div>
 <style>
-#mapid { height: 582px; }
+#mapid { height: 582px; position: relative;}
+.here{ 
+    background: white;
+    font-size: 23px; 
+    bottom: 0;
+    left: 20px;
+    position: absolute;
+    z-index:9999;
+    padding:10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+.here img{
+    margin-left: 10px;
+    margin-right: 10px;
+}
 .leaflet-container .leaflet-popup-content{
   margin: 0;
 }
@@ -27,7 +42,7 @@ Tabletop.init({
     simpleSheet: false
   });
 function afterLoadSheet(data, tabletop){
-  var mymap = L.map('mapid',{'scrollWheelZoom':false,}).setView([25.033571, 121.529533], 14);
+  var mymap = L.map('mapid',{'scrollWheelZoom':false,}).setView([25.043571, 121.529533], 14);
   L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '',
       maxZoom: 18,
