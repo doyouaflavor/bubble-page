@@ -183,7 +183,8 @@ jQuery.ajax = (function(_ajax){
                     break;
                 }
             }
-
+            
+            total = total.replace(",","");
             var amount = Math.floor(total/price);
             // var bubbles = amount* 5;
             var bubbles = amount ;
