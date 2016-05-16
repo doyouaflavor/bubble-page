@@ -94,6 +94,34 @@
         left: 0;
         right: 0;
     }
+@media screen and ( max-width: 490px ){
+    .bubble-container{
+        opacity: 0.5;
+/*
+        position: absolute;
+        top:0;
+        left:0;
+*/
+    }
+    .text-container{
+        position: absolute;
+        top:0;
+        left:0;
+        right: 0;
+        width: auto;
+    }
+    .text-header{
+/*        position: inherit;*/
+        top: 20px;
+    }
+    .text-body{
+/*        position: inherit;*/
+        top: 80px;
+    }
+    .header-number{
+        font-size: 25px;
+    }
+}
 </style>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script>
@@ -162,6 +190,8 @@ jQuery.ajax = (function(_ajax){
     };
     
 })(jQuery.ajax);
+    
+
    
     var url = 'https://backme.tw/projects/236/custom_embed?locale=zh-TW';
     $.ajax({
@@ -223,6 +253,15 @@ jQuery.ajax = (function(_ajax){
     });
     
 });
+
+//function setWidth(){
+//    var w = $(window).width();
+//    var f = 920;
+//    var scale = 1;
+//    w/f>1?(scale = 1):(scale = w/f);
+//    $('body').css('transform','scale(' + scale + ')');
+//    
+//}
 </script>
 </body>
 </html>

@@ -54,7 +54,6 @@ function afterLoadSheet(data, tabletop){
   var html_temp = '<h2>{{name}}</h2><img style="width: 100%;display:{{picture?block:none}}" src="{{picture}}" alt="{{title}}" /><div style="display:{{weekday?block:none}}"><span>日期：</span><span>{{weekday}}</span></div><div style="display:{{time?block:none}}"><span>時間：</span><span>{{time}}</span></div><div style="display:{{position?block:none}}"><span>位置：</span><span>{{position}}</span></div><p style="display:{{introduction?block:none}}">{{introduction}}</p>';
   for (var i = 0; i < arr_data.length; i++) {
     var item = arr_data[i];
-    console.log(item);
     if( !isNaN(item.lat) && !isNaN(item.lon) ){
         var htmlElem = html_temp;
         for(var j = 0;j<arr_fields.length; j++){
