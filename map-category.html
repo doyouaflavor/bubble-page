@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" rel="stylesheet"> 
+<link rel="stylesheet" href="css/leaflet.awesome-markers.css"/>
+<link rel="stylesheet" href="//cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+<!--<link rel="stylesheet" href="//code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css"/>-->
+   
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+ <script src="//cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+    <script src="js/leaflet.awesome-markers.js"></script>
+ <script src="//cdn.rawgit.com/junsuwhy/whereisama/gh-pages/js/tabletop.js"></script>
+
+
+</head>
+<body>
+        <div id="mapid"><div class="here">藍色點為人生百味的街賣者，尋找<img src="here.png" alt="這有街賣旗子圖案" height="48px" width="48px">旗子圖案的身影</div></div>
+<style>
+#mapid { height: 582px; position: relative;}
+.here{ 
+    background: white;
+    font-size: 23px; 
+    bottom: 0;
+    left: 20px;
+    position: absolute;
+    z-index:9999;
+    padding:10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+.here img{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.leaflet-container .leaflet-popup-content{
+  margin: 0;
+}
+.leaflet-popup-content {
+  width:320px !important;
+}
+</style>
+<script>
+$(function(){
+Tabletop.init({
+    key: '1Co5rE5-1P8zHCBimtvLX19KfIN740O_lWP1-taoQYIo',
+    callback: afterLoadSheet,
+    simpleSheet: false
+  });
+function afterLoadSheet(data, tabletop){
+  var mymap = L.map('mapid',{'scrollWheelZoom':false,}).setView([25.039571, 121.529533], 14);
+  L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '',
+      maxZoom: 19,
+      id: 'your.mapbox.project.id',
+      accessToken: 'your.mapbox.public.access.token'
+  }).addTo(mymap);
+  var arr_data = data.people.elements;
+  var arr_fields = ['name','type','time','weekday','position','introduction','picture'];
+  var html_temp = '<h2>{{name}}</h2><img style="width: 100%;display:{{picture?block:none}}" src="{{picture}}" alt="{{title}}" /><div style="display:{{weekday?block:none}}"><span>日期：</span><span>{{weekday}}</span></div><div style="display:{{time?block:none}}"><span>時間：</span><span>{{time}}</span></div><div style="display:{{position?block:none}}"><span>位置：</span><span>{{position}}</span></div><p style="display:{{introduction?block:none}}">{{introduction}}</p>';
+  for (var i = 0; i < arr_data.length; i++) {
+    var item = arr_data[i];
+    if( !isNaN(item.lat) && !isNaN(item.lon) ){
+        var htmlElem = html_temp;
+        for(var j = 0;j<arr_fields.length; j++){
+          var content = item[arr_fields[j]];
+          re = RegExp("\{\{" + arr_fields[j] + "\}\}","gi");
+          htmlElem = htmlElem.replace(re,content);
+          re2 = RegExp("\{\{" + arr_fields[j] + "\\?([^:]*):([^\}]*)\}\}","gi");
+          if(content == ""){
+            htmlElem = htmlElem.replace(re2,"$2");
+          }else{
+            htmlElem = htmlElem.replace(re2,"$1");
+          }
+        }
+        htmlElem += item.type;
+    //    var text = html_temp.replace(/\{title\}/g,item.name)
+    //      .replace(/\{img\}/g,item.picture)
+    //      .replace(/\{body\}/g,item.introduction);
+        var MarkerStyle = L.AwesomeMarkers.icon({
+                    icon: 'coffee',
+                    markerColor: 'red', 
+                    prefix: 'fa'
+            
+                });
+        switch(item.type){
+            case "人生百味":
+                MarkerStyle = L.AwesomeMarkers.icon({
+                    icon: 'star',
+                    markerColor: 'blue', 
+                    prefix: 'fa'
+                });
+                break;
+            case "地瓜媽媽":
+                MarkerStyle = L.AwesomeMarkers.icon({
+                    icon: 'heart',
+                    markerColor: 'darkpuple', 
+                    prefix: 'fa'
+                });
+                break;
+            case "巨輪合作社":
+                MarkerStyle = L.AwesomeMarkers.icon({
+                    icon: 'sun-o',
+                    markerColor: 'green', 
+                    prefix: 'fa'
+                });
+                break;
+            default:
+                MarkerStyle = L.AwesomeMarkers.icon({
+                    icon: 'cutlery',
+                    markerColor: 'red', 
+                    prefix: 'fa'
+                });
+                break;
+        }
+        
+        L.marker([item.lat, item.lon],{icon:MarkerStyle}).addTo(mymap)
+            .bindPopup(htmlElem);
+    }
+  }
+}
+
+});
+</script>
+</body>
+</html>
